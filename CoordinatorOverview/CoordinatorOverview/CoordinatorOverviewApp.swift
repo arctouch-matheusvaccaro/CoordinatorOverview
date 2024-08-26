@@ -7,11 +7,17 @@
 
 import SwiftUI
 
+// MARK: - CoordinatorOverviewApp
+
 @main
 struct CoordinatorOverviewApp: App {
+    
+    // MARK: Body
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppCoordinatorView()
+                .ignoresSafeArea()
         }
     }
 }
