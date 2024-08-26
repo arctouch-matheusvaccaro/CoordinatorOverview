@@ -12,6 +12,12 @@ import UIKit
 /// A `Router` that knows how to do horizontal (push based) presentation.
 final class NavigationRouter: NSObject {
     
+    // MARK: Internal Properties
+    
+    var topViewController: UIViewController? {
+        navigationController.topViewController
+    }
+    
     // MARK: Private Properties
     
     private let navigationController: UINavigationController

@@ -51,6 +51,31 @@ final class HomeCoordinator: CoordinatorProtocol {
             animated: animated,
             onDismissed: onDismissed)
     }
+    
+    private func presentHomeDetail(
+        for homeListOption: HomeListOption,
+        shouldPresentModally: Bool = false,
+        animated: Bool = true,
+        onDismissed: (() -> Void)?)
+    {
+        let navigationRouter: RouterProtocol
+        if shouldPresentModally,
+           let topViewController = router.topViewController
+        {
+            navigationRouter = ModalNavigationRouter(parentViewController: topViewController)
+        } else {
+            navigationRouter = router
+        }
+        
+        let homeDetailCoordinator = HomeDetailCoordinator(
+            homeListOption: homeListOption,
+            router: navigationRouter)
+        
+        presentChild(
+            homeDetailCoordinator,
+            animated: animated,
+            onDismissed: onDismissed)
+    }
 }
 
 // MARK: - HomeViewModelDelegate
@@ -60,10 +85,24 @@ extension HomeCoordinator: HomeViewModelDelegate {
     // MARK: Internal Methods
     
     func viewModel(_ viewModel: HomeViewModel, didSelectOption option: HomeListOption) {
-        print("Something")
+        switch option {
+        case .horizontalNavigation:
+            presentHomeDetail(
+                for: option,
+                onDismissed: nil)
+            
+        case .modalNavigation:
+            presentHomeDetail(
+                for: option,
+                shouldPresentModally: true,
+                onDismissed: nil)
+            
+        case .configurableNavigation:
+            print("TODO")
+        }
     }
     
     func didSelectSettingsButton(in viewModel: HomeViewModel) {
-        print("Other thing")
+        print("Settings")
     }
 }

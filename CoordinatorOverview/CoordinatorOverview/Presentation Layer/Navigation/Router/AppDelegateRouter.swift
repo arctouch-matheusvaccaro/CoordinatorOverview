@@ -16,6 +16,10 @@ final class AppDelegateRouter: RouterProtocol {
     
     let window: UIWindow
     
+    var topViewController: UIViewController? {
+        window.rootViewController
+    }
+    
     // MARK: Lifecyclce
     
     init(window: UIWindow) {

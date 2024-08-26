@@ -16,6 +16,10 @@ final class ModalNavigationRouter: NSObject {
     
     unowned let parentViewController: UIViewController
     
+    var topViewController: UIViewController? {
+        navigationController.topViewController
+    }
+    
     // MARK: Private Properties
     
     private let navigationController: UINavigationController = UINavigationController()

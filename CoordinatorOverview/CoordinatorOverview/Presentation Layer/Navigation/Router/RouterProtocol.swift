@@ -11,6 +11,10 @@ import UIKit
 
 protocol RouterProtocol: AnyObject {
     
+    // MARK: Internal Properties
+    
+    var topViewController: UIViewController? { get }
+    
     // MARK: Internal Methods
     
     func present(_ viewController: UIViewController, animated: Bool)
