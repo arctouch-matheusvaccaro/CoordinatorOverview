@@ -30,6 +30,7 @@ final class ModalNavigationRouter: NSObject {
         super.init()
         
         navigationController.delegate = self
+        navigationController.presentationController?.delegate = self
     }
 }
 
@@ -54,9 +55,7 @@ extension ModalNavigationRouter: RouterProtocol {
     }
     
     func dismiss(animated: Bool) {
-        let firstViewController = navigationController.viewControllers.first!
-        performOnDismissed(for: firstViewController)
-        
+        performOnDismissForAllViewControllers()
         parentViewController.dismiss(animated: animated)
     }
     
@@ -80,7 +79,6 @@ extension ModalNavigationRouter: RouterProtocol {
     
     @objc
     private func didTapCancel() {
-        performOnDismissed(for: navigationController.viewControllers.first!)
         dismiss(animated: true)
     }
     
@@ -96,7 +94,7 @@ extension ModalNavigationRouter: RouterProtocol {
     /// Perform `onDismissed` action for every `UIViewController` that was dismissed indirectly.
     ///
     /// This method is useful to ensure all View Controllers had their `onDismissed` action called when they're dismissed from the Back Button's Menu.
-    private func performOnDismissedForForgottenViewControllers() {
+    private func performOnDismissedForSilentlyDismissedViewControllers() {
         let viewControllersWithDismissActions = onDismissForViewController.keys
         let forgottenViewControllers = viewControllersWithDismissActions.filter {
             !navigationController.viewControllers.contains($0)
@@ -104,6 +102,12 @@ extension ModalNavigationRouter: RouterProtocol {
         
         for forgottenViewController in forgottenViewControllers {
             performOnDismissed(for: forgottenViewController)
+        }
+    }
+    
+    private func performOnDismissForAllViewControllers() {
+        for viewControllerToDismiss in onDismissForViewController.keys {
+            performOnDismissed(for: viewControllerToDismiss)
         }
     }
 }
@@ -120,14 +124,27 @@ extension ModalNavigationRouter: UINavigationControllerDelegate {
         animated: Bool)
     {
         guard
-            let dismissedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
-            !navigationController.viewControllers.contains(dismissedViewController)
+            let dismissedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from)
         else {
             return
         }
         
-        performOnDismissed(for: dismissedViewController)
+        let isMovingBackFromNavigation = !navigationController.viewControllers.contains(dismissedViewController)
         
-        performOnDismissedForForgottenViewControllers()
+        if isMovingBackFromNavigation {
+            performOnDismissed(for: dismissedViewController)
+            performOnDismissedForSilentlyDismissedViewControllers()
+        }
+    }
+}
+
+// MARK: - UIAdaptivePresentationControllerDelegate
+
+extension ModalNavigationRouter: UIAdaptivePresentationControllerDelegate {
+    
+    // MARK: Internal Methods
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        performOnDismissForAllViewControllers()
     }
 }

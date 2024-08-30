@@ -92,17 +92,13 @@ extension HomeDetailCoordinator: HomeDetailViewModelDelegate {
         }
         
         currentScreenIndex = nextScreenIndex
-        print("Current Screen Index updated to \(currentScreenIndex)")
+        print("Current Screen Index increased to \(currentScreenIndex)")
 
         presentHomeDetail(
             forScreenIndex: currentScreenIndex,
-            onDismissed: { [weak self] in
-                guard let self else {
-                    return
-                }
-                
+            onDismissed: {
                 self.currentScreenIndex -= 1
-                print("Current Screen Index updated to \(self.currentScreenIndex)")
+                print("Current Screen Index decreased to \(self.currentScreenIndex)")
             })
     }
     

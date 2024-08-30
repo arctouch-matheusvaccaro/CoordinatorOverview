@@ -82,7 +82,7 @@ extension NavigationRouter: RouterProtocol {
     /// Perform `onDismissed` action for every `UIViewController` that was dismissed indirectly.
     ///
     /// This method is useful to ensure all View Controllers had their `onDismissed` action called when they're dismissed from the Back Button's Menu.
-    private func performOnDismissedForForgottenViewControllers() {
+    private func performOnDismissedForSilentlyDismissedViewControllers() {
         let viewControllersWithDismissActions = onDismissForViewController.keys
         let forgottenViewControllers = viewControllersWithDismissActions.filter {
             !navigationController.viewControllers.contains($0)
@@ -106,14 +106,16 @@ extension NavigationRouter: UINavigationControllerDelegate {
         animated: Bool)
     {
         guard
-            let dismissedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
-            !navigationController.viewControllers.contains(dismissedViewController)
+            let dismissedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from)
         else {
             return
         }
         
-        performOnDismissed(for: dismissedViewController)
+        let isMovingBackFromNavigation = !navigationController.viewControllers.contains(dismissedViewController)
         
-        performOnDismissedForForgottenViewControllers()
+        if isMovingBackFromNavigation {
+            performOnDismissed(for: dismissedViewController)
+            performOnDismissedForSilentlyDismissedViewControllers()
+        }
     }
 }
