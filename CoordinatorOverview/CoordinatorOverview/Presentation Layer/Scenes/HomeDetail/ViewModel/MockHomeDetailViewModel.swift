@@ -13,6 +13,9 @@ final class MockHomeDetailViewModel: HomeDetailViewModelProtocol {
     
     // MARK: Internal Properties
     
+    let buttonTitle: String = "Go to Next Screen"
+    
+    
     @Published var navigationTitle: String
     
     // MARK: Lifecycle

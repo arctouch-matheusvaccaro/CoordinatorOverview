@@ -14,6 +14,7 @@ protocol HomeDetailViewModelProtocol: ObservableObject {
     // MARK: Internal Properties
     
     var navigationTitle: String { get }
+    var buttonTitle: String { get }
     
     // MARK: Internal Methods
     

@@ -56,8 +56,11 @@ final class HomeDetailCoordinator: CoordinatorProtocol {
         animated: Bool = true,
         onDismissed: (() -> Void)? = nil)
     {
+        let isLastScreen = (currentScreenIndex == totalNumberOfScreens)
+        
         let homeDetailViewModel = HomeDetailViewModel(
             navigationTitle: makeNavigationTitleForScreen(at: screenIndex),
+            isLastScreen: isLastScreen,
             delegate: self)
         
         let homeDetailView = HomeDetailView(viewModel: homeDetailViewModel)
@@ -94,8 +97,16 @@ extension HomeDetailCoordinator: HomeDetailViewModelDelegate {
         presentHomeDetail(
             forScreenIndex: currentScreenIndex,
             onDismissed: { [weak self] in
-                self?.currentScreenIndex -= 1
-                print("Current Screen Index updated to \(self?.currentScreenIndex ?? -1)")
+                guard let self else {
+                    return
+                }
+                
+                self.currentScreenIndex -= 1
+                print("Current Screen Index updated to \(self.currentScreenIndex)")
             })
+    }
+    
+    func viewModelDidTapDismiss(_ viewModel: HomeDetailViewModel) {
+        dismiss(animated: true)
     }
 }

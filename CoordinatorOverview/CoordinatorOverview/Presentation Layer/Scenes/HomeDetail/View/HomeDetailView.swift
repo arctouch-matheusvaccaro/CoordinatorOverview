@@ -39,7 +39,7 @@ private struct Content<ViewModel: HomeDetailViewModelProtocol>: View {
                 viewModel.goToNextScreen()
             },
             label: {
-                Text("Go to Next Screen")
+                Text(viewModel.buttonTitle)
             })
     }
 }

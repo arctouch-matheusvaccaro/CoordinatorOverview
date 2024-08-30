@@ -14,6 +14,7 @@ protocol HomeDetailViewModelDelegate: AnyObject {
     // MARK: Internal Methods
     
     func viewModelDidTapGoToNextScreen(_ viewModel: HomeDetailViewModel)
+    func viewModelDidTapDismiss(_ viewModel: HomeDetailViewModel)
 }
 
 // MARK: - HomeDetailViewModel
@@ -24,20 +25,35 @@ final class HomeDetailViewModel: HomeDetailViewModelProtocol {
     
     @Published var navigationTitle: String
     
+    var buttonTitle: String {
+        isLastScreen
+            ? "Dismiss"
+            : "Go to Next Screen"
+    }
+    
     // MARK: Private Properties
+    
+    private let isLastScreen: Bool
     
     private weak var delegate: HomeDetailViewModelDelegate?
     
     // MARK: Lifecycle
     
-    init(navigationTitle: String, delegate: HomeDetailViewModelDelegate?) {
+    init(
+        navigationTitle: String,
+        isLastScreen: Bool,
+        delegate: HomeDetailViewModelDelegate?)
+    {
         self.navigationTitle = navigationTitle
+        self.isLastScreen = isLastScreen
         self.delegate = delegate
     }
     
     // MARK: Internal Methods
     
     func goToNextScreen() {
-        delegate?.viewModelDidTapGoToNextScreen(self)
+        isLastScreen
+            ? delegate?.viewModelDidTapDismiss(self)
+            : delegate?.viewModelDidTapGoToNextScreen(self)
     }
 }
