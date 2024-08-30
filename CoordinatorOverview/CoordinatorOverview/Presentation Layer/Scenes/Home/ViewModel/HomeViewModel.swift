@@ -14,7 +14,6 @@ protocol HomeViewModelDelegate: AnyObject {
     // MARK: Internal Methods
         
     func viewModel(_ viewModel: HomeViewModel, didSelectOption option: HomeListOption)
-    func didSelectSettingsButton(in viewModel: HomeViewModel)
 }
 
 // MARK: - HomeViewModel
@@ -35,7 +34,6 @@ final class HomeViewModel: HomeViewModelProtocol {
         self.listOptions = [
             .horizontalNavigation,
             .modalNavigation,
-            .configurableNavigation
         ]
         
         self.delegate = delegate
@@ -45,9 +43,5 @@ final class HomeViewModel: HomeViewModelProtocol {
     
     func selectListOption(_ option: HomeListOption) {
         delegate?.viewModel(self, didSelectOption: option)
-    }
-    
-    func selectSettingsButton() {
-        delegate?.didSelectSettingsButton(in: self)
     }
 }

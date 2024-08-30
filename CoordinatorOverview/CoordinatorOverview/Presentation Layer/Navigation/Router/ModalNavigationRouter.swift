@@ -14,15 +14,11 @@ final class ModalNavigationRouter: NSObject {
     
     // MARK: Internal Properties
     
+    let navigationController: UINavigationController = UINavigationController()
+    
     unowned let parentViewController: UIViewController
     
-    var topViewController: UIViewController? {
-        navigationController.topViewController
-    }
-    
     // MARK: Private Properties
-    
-    private let navigationController: UINavigationController = UINavigationController()
     
     private var onDismissForViewController: [UIViewController: (() -> Void)] = [:]
     
@@ -96,6 +92,20 @@ extension ModalNavigationRouter: RouterProtocol {
         onDismiss()
         onDismissForViewController[viewController] = nil
     }
+    
+    /// Perform `onDismissed` action for every `UIViewController` that was dismissed indirectly.
+    ///
+    /// This method is useful to ensure all View Controllers had their `onDismissed` action called when they're dismissed from the Back Button's Menu.
+    private func performOnDismissedForForgottenViewControllers() {
+        let viewControllersWithDismissActions = onDismissForViewController.keys
+        let forgottenViewControllers = viewControllersWithDismissActions.filter {
+            !navigationController.viewControllers.contains($0)
+        }
+        
+        for forgottenViewController in forgottenViewControllers {
+            performOnDismissed(for: forgottenViewController)
+        }
+    }
 }
 
 // MARK: - UINavigationControllerDelegate
@@ -117,5 +127,7 @@ extension ModalNavigationRouter: UINavigationControllerDelegate {
         }
         
         performOnDismissed(for: dismissedViewController)
+        
+        performOnDismissedForForgottenViewControllers()
     }
 }

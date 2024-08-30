@@ -20,13 +20,6 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
     var body: some View {
         ContentList(viewModel: viewModel)
             .navigationTitle("Home")
-            .toolbar {
-                ToolbarItem {
-                    Button("Settings") {
-                        
-                    }
-                }
-            }
     }
 }
 

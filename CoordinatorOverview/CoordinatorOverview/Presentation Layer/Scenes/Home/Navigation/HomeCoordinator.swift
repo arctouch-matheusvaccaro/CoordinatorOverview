@@ -59,6 +59,7 @@ final class HomeCoordinator: CoordinatorProtocol {
         onDismissed: (() -> Void)?)
     {
         let navigationRouter: RouterProtocol
+        
         if shouldPresentModally,
            let topViewController = router.topViewController
         {
@@ -96,13 +97,6 @@ extension HomeCoordinator: HomeViewModelDelegate {
                 for: option,
                 shouldPresentModally: true,
                 onDismissed: nil)
-            
-        case .configurableNavigation:
-            print("TODO")
         }
-    }
-    
-    func didSelectSettingsButton(in viewModel: HomeViewModel) {
-        print("Settings")
     }
 }

@@ -15,7 +15,6 @@ enum HomeListOption: String {
     
     case horizontalNavigation = "Horizontal Navigation"
     case modalNavigation = "Modal Navigation"
-    case configurableNavigation = "Configurable Navigation"
     
     // MARK: Internal Properties
     

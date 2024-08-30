@@ -21,7 +21,6 @@ final class MockHomeViewModel: HomeViewModelProtocol {
         listOptions = [
             .horizontalNavigation,
             .modalNavigation,
-            .configurableNavigation
         ]
     }
     

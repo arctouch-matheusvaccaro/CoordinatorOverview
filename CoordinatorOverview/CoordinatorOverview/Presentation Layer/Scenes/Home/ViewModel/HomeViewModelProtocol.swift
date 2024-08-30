@@ -18,5 +18,4 @@ protocol HomeViewModelProtocol: ObservableObject {
     // MARK: Internal Methods
     
     func selectListOption(_ option: HomeListOption)
-    func selectSettingsButton()
 }

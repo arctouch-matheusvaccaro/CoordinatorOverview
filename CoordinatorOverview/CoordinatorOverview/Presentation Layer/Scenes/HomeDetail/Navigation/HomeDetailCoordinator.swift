@@ -22,6 +22,10 @@ final class HomeDetailCoordinator: CoordinatorProtocol {
     
     private let homeListOption: HomeListOption
     
+    private let initialScreenIndex = 1
+    private let totalNumberOfScreens = 3
+    private var currentScreenIndex: Int
+    
     // MARK: Lifecycle
     
     init(
@@ -30,6 +34,7 @@ final class HomeDetailCoordinator: CoordinatorProtocol {
     {
         self.homeListOption = homeListOption
         self.router = router
+        self.currentScreenIndex = initialScreenIndex
     }
     
     // MARK: Internal Methods
@@ -39,7 +44,7 @@ final class HomeDetailCoordinator: CoordinatorProtocol {
         onDismissed: (() -> Void)?)
     {
         presentHomeDetail(
-            for: homeListOption,
+            forScreenIndex: initialScreenIndex,
             animated: animated,
             onDismissed: onDismissed)
     }
@@ -47,11 +52,14 @@ final class HomeDetailCoordinator: CoordinatorProtocol {
     // MARK: Private Methods
     
     private func presentHomeDetail(
-        for homeListOption: HomeListOption,
+        forScreenIndex screenIndex: Int,
         animated: Bool = true,
-        onDismissed: (() -> Void)?)
+        onDismissed: (() -> Void)? = nil)
     {
-        let homeDetailViewModel = HomeDetailViewModel(homeListOption: homeListOption)
+        let homeDetailViewModel = HomeDetailViewModel(
+            navigationTitle: makeNavigationTitleForScreen(at: screenIndex),
+            delegate: self)
+        
         let homeDetailView = HomeDetailView(viewModel: homeDetailViewModel)
         
         let hostingController = UIHostingController(rootView: homeDetailView)
@@ -60,5 +68,34 @@ final class HomeDetailCoordinator: CoordinatorProtocol {
             hostingController,
             animated: animated,
             onDismissed: onDismissed)
+    }
+    
+    private func makeNavigationTitleForScreen(at index: Int) -> String {
+        "Screen \(index)"
+    }
+}
+
+// MARK: - HomeDetailViewModelDelegate
+
+extension HomeDetailCoordinator: HomeDetailViewModelDelegate {
+    
+    // MARK: Internal Methods
+    
+    func viewModelDidTapGoToNextScreen(_ viewModel: HomeDetailViewModel) {
+        let nextScreenIndex = currentScreenIndex + 1
+        
+        guard nextScreenIndex <= totalNumberOfScreens else {
+            return
+        }
+        
+        currentScreenIndex = nextScreenIndex
+        print("Current Screen Index updated to \(currentScreenIndex)")
+
+        presentHomeDetail(
+            forScreenIndex: currentScreenIndex,
+            onDismissed: { [weak self] in
+                self?.currentScreenIndex -= 1
+                print("Current Screen Index updated to \(self?.currentScreenIndex ?? -1)")
+            })
     }
 }

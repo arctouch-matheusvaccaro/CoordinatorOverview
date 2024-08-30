@@ -34,6 +34,21 @@ private struct Content<ViewModel: HomeDetailViewModelProtocol>: View {
     // MARK: Body
     
     var body: some View {
-        Text("Ayy")
+        Button(
+            action: {
+                viewModel.goToNextScreen()
+            },
+            label: {
+                Text("Go to Next Screen")
+            })
     }
 }
+
+// MARK: - Preview
+
+#Preview {
+    NavigationView {
+        HomeDetailView(viewModel: MockHomeDetailViewModel())
+    }
+}
+

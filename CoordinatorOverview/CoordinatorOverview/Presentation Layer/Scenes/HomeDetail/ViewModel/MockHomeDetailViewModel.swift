@@ -20,4 +20,10 @@ final class MockHomeDetailViewModel: HomeDetailViewModelProtocol {
     init() {
         navigationTitle = "Test"
     }
+    
+    // MARK: Internal Methods
+    
+    func goToNextScreen() {
+        print("Tapped Go To Next Screen.")
+    }
 }

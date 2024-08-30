@@ -20,6 +20,11 @@ final class AppDelegateRouter: RouterProtocol {
         window.rootViewController
     }
     
+    var navigationController: UINavigationController {
+        assertionFailure("AppDelegateRouter does not contain a navigation controller because it only handles the first Window presentation of the app.")
+        return UINavigationController()
+    }
+    
     // MARK: Lifecyclce
     
     init(window: UIWindow) {
@@ -38,6 +43,6 @@ final class AppDelegateRouter: RouterProtocol {
     }
     
     func dismiss(animated: Bool) {
-        assertionFailure("AppDelegateRouter cannot be dismissed because it presents the key window of the app.")
+        assertionFailure("AppDelegateRouter cannot be dismissed because it presents the key Window of the app.")
     }
 }

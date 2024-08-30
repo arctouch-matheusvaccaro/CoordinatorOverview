@@ -14,4 +14,8 @@ protocol HomeDetailViewModelProtocol: ObservableObject {
     // MARK: Internal Properties
     
     var navigationTitle: String { get }
+    
+    // MARK: Internal Methods
+    
+    func goToNextScreen()
 }

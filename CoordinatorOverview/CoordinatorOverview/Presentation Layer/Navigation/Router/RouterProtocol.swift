@@ -14,6 +14,7 @@ protocol RouterProtocol: AnyObject {
     // MARK: Internal Properties
     
     var topViewController: UIViewController? { get }
+    var navigationController: UINavigationController { get }
     
     // MARK: Internal Methods
     
@@ -25,6 +26,12 @@ protocol RouterProtocol: AnyObject {
 // MARK: - Default Implementations
 
 extension RouterProtocol {
+    
+    // MARK: Internal Properties
+    
+    var topViewController: UIViewController? {
+        navigationController.topViewController
+    }
     
     // MARK: Internal Methods
     

@@ -14,13 +14,10 @@ final class NavigationRouter: NSObject {
     
     // MARK: Internal Properties
     
-    var topViewController: UIViewController? {
-        navigationController.topViewController
-    }
+    let navigationController: UINavigationController
     
     // MARK: Private Properties
     
-    private let navigationController: UINavigationController
     private let rootViewController: UIViewController?
     
     private var onDismissForViewController: [UIViewController: (() -> Void)] = [:]
@@ -81,6 +78,20 @@ extension NavigationRouter: RouterProtocol {
         onDismiss()
         onDismissForViewController[viewController] = nil
     }
+    
+    /// Perform `onDismissed` action for every `UIViewController` that was dismissed indirectly.
+    ///
+    /// This method is useful to ensure all View Controllers had their `onDismissed` action called when they're dismissed from the Back Button's Menu.
+    private func performOnDismissedForForgottenViewControllers() {
+        let viewControllersWithDismissActions = onDismissForViewController.keys
+        let forgottenViewControllers = viewControllersWithDismissActions.filter {
+            !navigationController.viewControllers.contains($0)
+        }
+        
+        for forgottenViewController in forgottenViewControllers {
+            performOnDismissed(for: forgottenViewController)
+        }
+    }
 }
 
 // MARK: - UINavigationControllerDelegate
@@ -102,5 +113,7 @@ extension NavigationRouter: UINavigationControllerDelegate {
         }
         
         performOnDismissed(for: dismissedViewController)
+        
+        performOnDismissedForForgottenViewControllers()
     }
 }
